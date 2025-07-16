@@ -22,7 +22,7 @@ if uploaded_pdf and query:
         raw_text = extract_text_from_pdf(uploaded_pdf)
         vectorstore = create_vectorstore(raw_text)
         qa_chain = build_qa_chain(vectorstore, api_key=api_key)
-        response = qa_chain.invoke({"query": query})
+        response = qa_chain.invoke(query)
 
     st.success("✅ Your book has been indexed.")
     st.markdown("### 📌 Answer:")
