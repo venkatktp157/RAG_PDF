@@ -1,6 +1,7 @@
 from langchain_groq import ChatGroq
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain.schema import Document
 
 def build_qa_chain(vectorstore, model="llama3-8b-8192", api_key=None):
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
@@ -13,12 +14,13 @@ def build_qa_chain(vectorstore, model="llama3-8b-8192", api_key=None):
         Question: {question}
     """)
 
-    qa_chain = RetrievalQA(
-        retriever=retriever,
-        llm=llm,
-        prompt=prompt,
-        return_source_documents=True,
-        output_key="result"  # This WILL be honored
+    def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
     )
 
-    return qa_chain
+    return chain
