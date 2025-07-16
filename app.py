@@ -22,12 +22,13 @@ if uploaded_pdf and query:
     st.markdown("### 📌 Answer:")
     st.write(response)
 
-    # ✅ Context chunk display lives INSIDE this block
-    try:
-        if isinstance(response, dict) and "source_documents" in response:
-            st.markdown("### 🧾 Context Used:")
-            for i, doc in enumerate(response["source_documents"], 1):
+    # 🛡️ Safe display of source chunks
+    if isinstance(response, dict) and response.get("source_documents"):
+        st.markdown("### 🧾 Context Used:")
+        for i, doc in enumerate(response["source_documents"], start=1):
+            chunk = getattr(doc, "page_content", "")
+            if chunk:
                 st.markdown(f"**Chunk {i}:**")
-                st.write(doc.page_content[:500])
-    except Exception as e:
-        st.warning("Couldn't load source context.")
+                st.write(chunk[:500])
+            else:
+                st.markdown(f"**Chunk {i}: [Empty or missing content]**")
