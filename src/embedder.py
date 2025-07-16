@@ -1,6 +1,6 @@
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 
 def create_vectorstore(text):
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
