@@ -27,3 +27,9 @@ if uploaded_pdf and query:
     st.success("✅ Your book has been indexed.")
     st.markdown("### 📌 Answer:")
     st.write(response["result"])
+
+if "source_documents" in response:
+    st.markdown("### 🧾 Context Used:")
+    for i, doc in enumerate(response["source_documents"], 1):
+        st.markdown(f"**Chunk {i}:**")
+        st.write(doc.page_content[:500])  # Show first 500 characters of each chunk

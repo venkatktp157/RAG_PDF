@@ -1,18 +1,24 @@
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 
 def build_qa_chain(vectorstore, model="llama3-8b-8192", api_key=None):
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
     llm = ChatGroq(groq_api_key=api_key, model_name=model)
 
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        return_source_documents=True,
-        chain_type_kwargs={"output_key": "result"}  # ✅ Required to fix .invoke()
-    )
+    prompt = PromptTemplate.from_template("""
+        Use the following context to answer the question:
+        {context}
 
-    # 🚨 Explicitly set this to prevent ValueError
-    qa_chain.output_key = "result"
+        Question: {question}
+    """)
+
+    qa_chain = RetrievalQA(
+        retriever=retriever,
+        llm=llm,
+        prompt=prompt,
+        return_source_documents=True,
+        output_key="result"  # This WILL be honored
+    )
 
     return qa_chain
