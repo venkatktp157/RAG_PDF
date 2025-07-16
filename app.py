@@ -22,17 +22,10 @@ if uploaded_pdf and query:
     st.markdown("### 📌 Answer:")
     st.write(response)
 
-    # 🛡️ Safe display of source chunks
-    # Safely show source chunks
-    if isinstance(response, dict) and "source_documents" in response:
-        st.markdown("### 🧾 Context Used:")
-
-        # Filter for valid Document-type entries
-        valid_docs = [
-            doc for doc in response["source_documents"]
-            if hasattr(doc, "page_content") and isinstance(doc.page_content, str)
-        ]
-
-        for i, doc in enumerate(valid_docs, start=1):
+   # Show context manually by querying retriever directly
+    with st.expander("📄 Show context chunks"):
+        docs = vectorstore.as_retriever(search_kwargs={"k": 5}).get_relevant_documents(query)
+        for i, doc in enumerate(docs, start=1):
+            chunk = getattr(doc, "page_content", "")
             st.markdown(f"**Chunk {i}:**")
-            st.write(doc.page_content[:500])
+            st.write(chunk[:500])
