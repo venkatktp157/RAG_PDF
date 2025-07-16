@@ -23,12 +23,16 @@ if uploaded_pdf and query:
     st.write(response)
 
     # 🛡️ Safe display of source chunks
-    if isinstance(response, dict) and response.get("source_documents"):
+    # Safely show source chunks
+    if isinstance(response, dict) and "source_documents" in response:
         st.markdown("### 🧾 Context Used:")
-        for i, doc in enumerate(response["source_documents"], start=1):
-            chunk = getattr(doc, "page_content", "")
-            if chunk:
-                st.markdown(f"**Chunk {i}:**")
-                st.write(chunk[:500])
-            else:
-                st.markdown(f"**Chunk {i}: [Empty or missing content]**")
+
+        # Filter for valid Document-type entries
+        valid_docs = [
+            doc for doc in response["source_documents"]
+            if hasattr(doc, "page_content") and isinstance(doc.page_content, str)
+        ]
+
+        for i, doc in enumerate(valid_docs, start=1):
+            st.markdown(f"**Chunk {i}:**")
+            st.write(doc.page_content[:500])
