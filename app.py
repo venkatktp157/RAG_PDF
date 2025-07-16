@@ -11,7 +11,6 @@ api_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
 uploaded_pdf = st.file_uploader("Upload a PDF file", type="pdf")
 query = st.text_input("Ask a question based on the uploaded book:")
 
-# ✅ Handle both inputs together
 if uploaded_pdf and query:
     with st.spinner("Reading and embedding your book..."):
         raw_text = extract_text_from_pdf(uploaded_pdf)
@@ -23,9 +22,12 @@ if uploaded_pdf and query:
     st.markdown("### 📌 Answer:")
     st.write(response)
 
-    # ✅ Display chunks only if response contains source documents
-    if isinstance(response, dict) and "source_documents" in response:
-        st.markdown("### 🧾 Context Used:")
-        for i, doc in enumerate(response["source_documents"], 1):
-            st.markdown(f"**Chunk {i}:**")
-            st.write(doc.page_content[:500])  # Show first 500 chars of each chunk
+    # ✅ Context chunk display lives INSIDE this block
+    try:
+        if isinstance(response, dict) and "source_documents" in response:
+            st.markdown("### 🧾 Context Used:")
+            for i, doc in enumerate(response["source_documents"], 1):
+                st.markdown(f"**Chunk {i}:**")
+                st.write(doc.page_content[:500])
+    except Exception as e:
+        st.warning("Couldn't load source context.")
