@@ -25,12 +25,14 @@ if uploaded_pdf and query:
         docs = vectorstore.as_retriever(search_kwargs={"k": 5}).get_relevant_documents(query)
 
     # Check if response is meaningful and contextually grounded
-    if not response or response.strip() == "" or "I'm not sure" in response.lower():
+    response_text = response.content if hasattr(response, "content") else str(response)
+
+    if not response_text.strip() or "i'm not sure" in response_text.lower():
         st.warning("🤔 I'm sorry, but I couldn't find an answer to that in your uploaded document. Try asking something more closely related to the book's content.")
     else:
         st.success("✅ Your book has been indexed.")
         st.markdown("### 📌 Answer:")
-        st.write(response)
+        st.write(response_text)
 
     # 💬 Context chunks preview (optional)
     with st.expander("📄 Show context chunks used in answer"):
