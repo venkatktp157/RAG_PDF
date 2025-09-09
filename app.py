@@ -37,9 +37,9 @@ if uploaded_pdf and query:
                 st.markdown(f"**Chunk {i}:**")
                 st.write(doc.page_content[:500])
 
-    # 💬 Context chunks preview (optional)
-    with st.expander("📄 Show context chunks used in answer"):
-        for i, doc in enumerate(docs, start=1):
-            chunk = getattr(doc, "page_content", "")
-            st.markdown(f"**Chunk {i}:**")
-            st.write(chunk[:500])
+    # # 💬 Context chunks preview (optional)
+    # with st.expander("📄 Show context chunks used in answer"):
+    #     for i, doc in enumerate(docs, start=1):
+    #         chunk = getattr(doc, "page_content", "")
+    #         st.markdown(f"**Chunk {i}:**")
+    #         st.write(chunk[:500])
