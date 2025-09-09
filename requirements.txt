@@ -1,6 +1,6 @@
 langchain==0.3.26
 langchain-core==0.3.68
-langchain-community==0.3.27
+langchain-huggingface
 langchain-groq==0.3.6
 groq==0.30.0
 streamlit==1.46.1
