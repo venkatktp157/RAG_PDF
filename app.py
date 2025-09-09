@@ -24,9 +24,13 @@ if uploaded_pdf and query:
         # Manually retrieve context chunks for display
         docs = vectorstore.as_retriever(search_kwargs={"k": 5}).get_relevant_documents(query)
 
-    st.success("✅ Your book has been indexed.")
-    st.markdown("### 📌 Answer:")
-    st.write(response)
+    # Check if response is meaningful and contextually grounded
+    if not response or response.strip() == "" or "I'm not sure" in response.lower():
+        st.warning("🤔 I'm sorry, but I couldn't find an answer to that in your uploaded document. Try asking something more closely related to the book's content.")
+    else:
+        st.success("✅ Your book has been indexed.")
+        st.markdown("### 📌 Answer:")
+        st.write(response)
 
     # 💬 Context chunks preview (optional)
     with st.expander("📄 Show context chunks used in answer"):
