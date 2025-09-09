@@ -2,7 +2,7 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 
-def build_qa_chain(vectorstore, model="llama3-8b-8192", api_key=None):
+def build_qa_chain(vectorstore, model="llama-3.3-70b-versatile", api_key=None):
     # Use retriever to get chunks
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
