@@ -2,7 +2,7 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 
-def build_qa_chain(vectorstore, model="qwen/qwen3.6-27b", api_key=None):
+def build_qa_chain(vectorstore, model="openai/gpt-oss-120b", api_key=None):
     # Use retriever to get chunks
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
