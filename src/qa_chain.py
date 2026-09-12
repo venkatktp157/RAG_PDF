@@ -11,7 +11,8 @@ def build_qa_chain(vectorstore, model="openai/gpt-oss-120b", api_key=None):
 
     # Prompt structure for LLM
     prompt = PromptTemplate.from_template("""
-        Use the following context to answer the question.
+        You are a helpful assistant. Use ONLY the following context to answer the question.
+        If the context does not contain the answer, say "I couldn't find relevant information in the document."
         {context}
 
         Question: {question}
